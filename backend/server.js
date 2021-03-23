@@ -35,7 +35,7 @@ router.post('/register',validInfo,async (req,res)=>{
         const username = nameParts.length==2 ? nameParts[0] : null;
 
        const newEmp=await pool.query(
-           "INSERT INTO emp (username,first_name,last_name,designation,department,business,email,bank_name,bank_branch,bank_ifsc,ac_no,password) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *",
+           "INSERT INTO emp (username,first_name,last_name,designation,department,business,email,bank_name,bank_branch,bank_ifsc,account_no,password) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *",
            [username,first_name,last_name,designation,department,business,email,bank_name,bank_branch,bank_ifsc,ac_no,bcryptPassword]
        );
        const jwtToken = jwtGenerator(newEmp.rows[0].emp_id);
