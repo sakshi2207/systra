@@ -41,6 +41,7 @@ function Register({ setAuth }){
       if (parseRes.jwtToken) {
         localStorage.setItem("token", parseRes.jwtToken);
         setAuth(true);
+        toast.success(`Your password is ${parseRes.password}`);
         toast.success("Register Successfully");
       } else {
         setAuth(false);
