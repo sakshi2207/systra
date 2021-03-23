@@ -27,7 +27,7 @@ function Register({ setAuth }){
       const body = {
           firstname, lastname, designation,business,department,email,bank_name,bank_branch,bank_ifsc,ac_no};
       const response = await fetch(
-        "http://localhost:5000/register",
+        "http://localhost:5000/auth/register",
         {
           method: "POST",
           headers: {

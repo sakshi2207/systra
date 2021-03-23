@@ -16,7 +16,7 @@ const Home = ({ setAuth }) => {
   console.log(list);
   const getProfile = async () => {
     try {
-        const res = await fetch("http://localhost:5000/", {
+        const res = await fetch("http://localhost:5000/auth", {
         method: "POST",
         headers: { jwt_token: localStorage.token }
       });
