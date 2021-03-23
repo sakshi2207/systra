@@ -8,7 +8,7 @@ const authorize=require('../middleware/authorize');
 
 
 //routers
-router.post('/register',async (req,res)=>{
+router.post('/register', validInfo, async (req,res)=>{
     const {first_name,last_name,designation,department,business,email,bank_name,bank_branch,bank_ifsc,ac_no} = req.body;
     try{
           const emp = await pool.query("SELECT * FROM emp WHERE email = $1", [
@@ -59,7 +59,7 @@ router.post('/register',async (req,res)=>{
         if (!validPassword) {
           return res.status(401).json("Invalid Credential");
         }
-        const jwtToken = jwtGenerator(user.rows[0].emp_id);
+        const jwtToken = jwtGenerator(emp.rows[0].emp_id);
         return res.json({ jwtToken });
       } catch (err) {
         console.error(err.message);
@@ -74,14 +74,14 @@ router.post('/register',async (req,res)=>{
         res.status(500).send("Server error");
       }
     });
-    router.post("/home", authorize, async (req, res) => {
+    router.post("/", authorize, async (req, res) => {
         try {
           const emp = await pool.query(
             "SELECT username FROM emp WHERE emp_id = $1",
             [req.emp.id] 
           ); 
         
-          res.json(user.rows[0]);
+          res.json(emp.rows[0]);
         } catch (err) {
           console.error(err.message);
           res.status(500).send("Server error");

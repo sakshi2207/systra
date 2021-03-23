@@ -18,25 +18,25 @@ app.use("/auth", require("./routers/dashboard"));
 app.get("/emp",(req,res)=>{
     pool.query("SELECT * FROM emp")
     .then(emp=>res.json(emp))
-    .catch(err=>console.log(err.message));
+    .catch(err=>res.json(err.message));
 
 });
 
-app.get("/emp/:emp_id",(req,res)=>{
+app.get("/emp/:id",(req,res)=>{
     const {id}=req.params;
     pool.query("SELECT * FROM emp WHERE id=$1",[id])
     .then(emp=>res.json(emp))
     .catch(err=>console.log(err.message));
 
 })
-app.put("/emp/:emp_id",(req,res)=>{
-    pool.query("UPDATE emp SET firstname=$1 WHERE id=$2",
-    [req.body.firstname,req.params])
-    .then(emp1=>res.json(emp1))
+app.put("/emp/:id",(req,res)=>{
+    pool.query("UPDATE emp SET password=$1 WHERE id=$2",
+    [req.body.password,req.params])
+    .then(emp=>res.json(emp))
     .catch(err=>console.log(err.message));
 });
 
-app.delete("/emp/:emp_id",(req,res)=>{
+app.delete("/emp/:id",(req,res)=>{
     pool.query("DELETE * FROM emp WHERE id=$1",[req.params])
     .then(()=>res.json("Employee Deleted"))
     .catch(err=>console.log(err.message));

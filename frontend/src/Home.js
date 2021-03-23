@@ -1,29 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { Link} from "react-router-dom";
 
 const Home = ({ setAuth }) => {
   const [name, setName] = useState("");
-  const [emp, setemp] = useState([]);
-  const res2 =  fetch("http://localhost:5000/emp", {
-    method: "GET",
-   
-  });
+  const [emp,setEmp]= useState([]);
 
-  const list = res2.json();
-
-
-  
-  console.log(list);
-  const getProfile = async () => {
+  const getEmp = async () => {
     try {
-        const res = await fetch("http://localhost:5000/auth", {
+      const response = await fetch("http://localhost:5000/todo");
+      const jsonData = await response.json();
+
+      setEmp(jsonData);
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+ 
+  const getProfile = async emp_id => {
+    try {
+        const res = await fetch(`http://localhost:5000/emp/${emp_id}`, {
         method: "POST",
         headers: { jwt_token: localStorage.token }
       });
       const parseData = await res.json();
 
       setName(parseData.first_name+parseData.last_name);
-
       
       
     } catch (err) {
@@ -41,33 +43,24 @@ const Home = ({ setAuth }) => {
       console.error(err.message);
     }
   };
-  const deleteEmp = async id => {
-    try {
-      const deleteEmp = await fetch(`http://localhost:5000/emp/${id}`, {
-        method: "DELETE"
-      });
-
-      setemp(emp.filter(emp => emp.emp_id !== id));
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
-
+  
+ 
   useEffect(() => {
     getProfile();
+    getEmp();
   }, []);
 
   return (
-    <div>
+    <div style={{backgroundColor:"lightblue"}}>
       <h1 className="mt-5">Home</h1>
       <h2>Welcome {name}</h2>
       <button onClick={e => logout(e)} className="btn btn-primary">
         Logout
       </button>
+      <hr/>
       <h1 className="text-center mt-5">Employee Table</h1>
-                 <table style="width:100%">
+                 <table style={{width:"100%",backgroundColor:"yellow",border:"2px solid black",borderCollapse:"collapse"}}>
                      <thead>
-                         <tr>
                              <th>Emp_id</th>
                              <th >Firstname</th>
                              <th>Lastname</th>
@@ -79,10 +72,9 @@ const Home = ({ setAuth }) => {
                              <th>Bank ifsc</th>
                              <th>E-mail</th>
                              <th>Account No.</th>
-                         </tr>
                      </thead>
                      <tbody>
-                    {list.map(item=>(
+                    {emp.map(item=>(
                          <tr key={item.emp_id}>
                              <td>{item.first_name}</td>
                              <td>{item.last_name}</td>
@@ -94,35 +86,15 @@ const Home = ({ setAuth }) => {
                              <td>{item.bank_ifsc}</td>
                              <td>{item.email}</td>
                              <td>{item.ac_no}</td>
-                             <td>
-                               <button className="btn btn-danger"
-                                onClick={() => deleteEmp(emp.emp_id)}> Delete
-                                </button>
-                              </td>
+                             
                           </tr>
                         ))}
                     </tbody>
                  </table>
+                 <Link to="/chart" className="btn btn-info">See the chart</Link>
               </div>
 
   );
 };
 
 export default Home;
-// function Home() {
-//     return (
-//         <div>
-//             <div className="container">
-//                 <h1 className="text-center mt-5">Employee Table</h1>
-//                 <table style="width:100%">
-//                     {list.map(item=>(
-//                         <tr key={item}><td>{item}</td></tr>
-//                     ))}
-//                 </table>
-//             </div>
-            
-//         </div>
-//     )
-// }
-
-// export default Home

@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 
 function Register({ setAuth }){
   const [inputs, setInputs] = useState({
-    firstname:"",
-    lastname:"",
+    first_name:"",
+    last_name:"",
     designation:"",
     business:"",
     department:"",
@@ -16,7 +16,7 @@ function Register({ setAuth }){
     email: ""
   });
 
-  const { firstname, lastname, designation,business,department,email,bank_name,bank_branch,bank_ifsc,ac_no} = inputs;
+  const { first_name, last_name, designation,business,department,email,bank_name,bank_branch,bank_ifsc,ac_no} = inputs;
 
   const onChange = e =>
     setInputs({ ...inputs, [e.target.name]: e.target.value });
@@ -25,7 +25,7 @@ function Register({ setAuth }){
     e.preventDefault();
     try {
       const body = {
-          firstname, lastname, designation,business,department,email,bank_name,bank_branch,bank_ifsc,ac_no};
+          first_name, last_name, designation,business,department,email,bank_name,bank_branch,bank_ifsc,ac_no};
       const response = await fetch(
         "http://localhost:5000/auth/register",
         {
@@ -57,14 +57,14 @@ function Register({ setAuth }){
             <h1 className="mt-5 text-center">Register</h1>
             <form onSubmit={onSubmitForm}>
                 <label  for="firstname">Firstname</label>
-                <input name="firstname" type="text" 
-                value={firstname}
+                <input name="first_name" type="text" 
+                value={first_name}
                 placeholder="firstname"
                 onChange={e => onChange(e)}
                 className="form-control my-3"/>
                 <label  for="lastname">Lastname</label>
-                <input name="lastname" type="text" 
-                        value={lastname}
+                <input name="last_name" type="text" 
+                        value={last_name}
                   placeholder="lastname"
                   onChange={e => onChange(e)}
                   className="form-control my-3"/>
@@ -114,7 +114,7 @@ function Register({ setAuth }){
             <p className="text-center">OR</p>
             
             <div>
-                <h5 className="text-center">Already have an Account Singn Up</h5>
+                <h5 className="text-center">Already have an Account Sign Up</h5>
                 <Link className="btn btn-success btn-block" to="/login">Login</Link>
             </div>
         </div>
