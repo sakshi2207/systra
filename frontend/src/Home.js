@@ -1,27 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Link} from "react-router-dom";
 import { PieChart } from 'react-minimal-pie-chart';
 
 
-const Home = ({ setAuth }) => {
+const Home = ({setAuth}) => {
   const [name, setName] = useState("");
   const [emps,setEmps]= useState([]);
 
   const getEmp = async () => {
     try {
-      const response = await fetch("http://localhost:5000/");
+      const response = await fetch("http://localhost:5000/emp",{
+        method:"GET"
+      });
       const jsonData = await response.json();
       console.log(jsonData);
       setEmps(jsonData);
+      console.log(emps);
     } catch (err) {
-      toast.error(err.message);
+      console.error(err.message);
     }
   };
  
   const getProfile = async () => {
     try {
-        const res = await fetch(`http://localhost:5000/auth/`, {
+        const res = await fetch("http://localhost:5000/auth/", {
         method: "POST",
         headers: { jwt_token: localStorage.token }
       });
@@ -46,11 +48,14 @@ const Home = ({ setAuth }) => {
     }
   };
   
- 
-  
+  useEffect(() => {
     getProfile();
     getEmp();
+  }, []);
   
+   
+   
+    
 
   return (
     <div style={{backgroundColor:"lightblue"}}>
@@ -76,7 +81,8 @@ const Home = ({ setAuth }) => {
                              <th>Account No.</th>
                      </thead>
                      <tbody>
-                    {emps.map(item=>(
+                       {console.log()}
+                    {emps.rows.map(item=>(
                          <tr key={item.emp_id}>
                              <td> {[item.first_name,item.last_name].join(" ")}</td>
                              <td>{item.designation}</td>

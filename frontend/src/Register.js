@@ -3,6 +3,7 @@ import { Link} from "react-router-dom";
 import { toast } from "react-toastify";
 
 function Register({ setAuth }){
+  const [password,setPassword]=useState();
   const [inputs, setInputs] = useState({
     first_name:"",
     last_name:"",
@@ -41,6 +42,7 @@ function Register({ setAuth }){
       if (parseRes.jwtToken) {
         localStorage.setItem("token", parseRes.jwtToken);
         setAuth(true);
+        setPassword(parseRes.password);
         toast.success(`Your password is ${parseRes.password}`);
         toast.success("Register Successfully");
       } else {
@@ -107,8 +109,9 @@ function Register({ setAuth }){
                 <input type="number" name="ac_no" value={ac_no}
                 onChange={e => onChange(e)}
                 className="form-control my-3"/>
-                <button className="btn btn-success btn-block">Submit</button>       
                 
+                <button className="btn btn-success btn-block">Submit</button>       
+                {password!=undefined && `Your password is ${password}`}
             </form>
             <hr/>
             <p className="text-center">OR</p>
