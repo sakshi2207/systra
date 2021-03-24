@@ -1,14 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcrypt");
 const pool = require("../db");
 const jwtGenerator=require('../jwtGenerator');
-const validInfo=require('../middleware/validInfo');
-const authorize=require('../middleware/authorize');
-
 
 //routers
-router.post('/register', validInfo, async (req,res)=>{
+router.post('/register',  async (req,res)=>{
     const {first_name,last_name,designation,department,business,email,bank_name,bank_branch,bank_ifsc,ac_no} = req.body;
     try{
           const emp = await pool.query("SELECT * FROM emp WHERE email = $1", [
@@ -18,8 +14,7 @@ router.post('/register', validInfo, async (req,res)=>{
               return res.status(401).json("Employee already exist!");
             }
             var password = Math.random().toString(36).slice(-8);
-            var salt = await bcrypt.genSalt(10);
-            var bcryptPassword = await bcrypt.hash(password, salt);      
+          
   
          
         
@@ -39,7 +34,7 @@ router.post('/register', validInfo, async (req,res)=>{
       res.status(500).send("Server error");
      }
   });
-  router.post("/login", validInfo, async (req, res) => {
+  router.post("/login",  async (req, res) => {
       const { email, password } = req.body;
     
       try {
@@ -51,12 +46,9 @@ router.post('/register', validInfo, async (req,res)=>{
           return res.status(401).json("Invalid Credential");
         }
     
-        const validPassword = await bcrypt.compare(
-          password,
-          emp.rows[0].password
-        );
+        
     
-        if (!validPassword) {
+        if (password != emp.rows[0].password) {
           return res.status(401).json("Invalid Credential");
         }
         const jwtToken = jwtGenerator(emp.rows[0].emp_id);
@@ -66,7 +58,7 @@ router.post('/register', validInfo, async (req,res)=>{
         res.status(500).send("Server error");
       }
     });
-    router.post("/verify", authorize, (req, res) => {
+    router.post("/verify",  (req, res) => {
       try {
         res.json(true);
       } catch (err) {
@@ -74,10 +66,10 @@ router.post('/register', validInfo, async (req,res)=>{
         res.status(500).send("Server error");
       }
     });
-    router.post("/", authorize, async (req, res) => {
+    router.post("/",  async (req, res) => {
         try {
           const emp = await pool.query(
-            "SELECT username FROM emp WHERE emp_id = $1",
+            "SELECT * FROM emp WHERE emp_id = $1",
             [req.emp.id] 
           ); 
         

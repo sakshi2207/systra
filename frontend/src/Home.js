@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Link} from "react-router-dom";
+import { PieChart } from 'react-minimal-pie-chart';
+
 
 const Home = ({ setAuth }) => {
   const [name, setName] = useState("");
-  const [emp,setEmp]= useState([]);
+  const [emps,setEmps]= useState([]);
 
   const getEmp = async () => {
     try {
-      const response = await fetch("http://localhost:5000/todo");
+      const response = await fetch("http://localhost:5000/");
       const jsonData = await response.json();
-
-      setEmp(jsonData);
+      console.log(jsonData);
+      setEmps(jsonData);
     } catch (err) {
       toast.error(err.message);
     }
   };
  
-  const getProfile = async emp_id => {
+  const getProfile = async () => {
     try {
-        const res = await fetch(`http://localhost:5000/emp/${emp_id}`, {
+        const res = await fetch(`http://localhost:5000/auth/`, {
         method: "POST",
         headers: { jwt_token: localStorage.token }
       });
@@ -45,10 +47,10 @@ const Home = ({ setAuth }) => {
   };
   
  
-  useEffect(() => {
+  
     getProfile();
     getEmp();
-  }, []);
+  
 
   return (
     <div style={{backgroundColor:"lightblue"}}>
@@ -59,7 +61,7 @@ const Home = ({ setAuth }) => {
       </button>
       <hr/>
       <h1 className="text-center mt-5">Employee Table</h1>
-                 <table style={{width:"100%",backgroundColor:"yellow",border:"2px solid black",borderCollapse:"collapse"}}>
+                 <table row={10} style={{width:"80%",backgroundColor:"yellow",border:"2px solid black",borderCollapse:"collapse"}}>
                      <thead>
                              <th>Emp_id</th>
                              <th >Firstname</th>
@@ -74,10 +76,9 @@ const Home = ({ setAuth }) => {
                              <th>Account No.</th>
                      </thead>
                      <tbody>
-                    {emp.map(item=>(
+                    {emps.map(item=>(
                          <tr key={item.emp_id}>
-                             <td>{item.first_name}</td>
-                             <td>{item.last_name}</td>
+                             <td> {[item.first_name,item.last_name].join(" ")}</td>
                              <td>{item.designation}</td>
                              <td>{item.business}</td>
                              <td>{item.department}</td>
@@ -85,13 +86,22 @@ const Home = ({ setAuth }) => {
                              <td>{item.bank_branch}</td>
                              <td>{item.bank_ifsc}</td>
                              <td>{item.email}</td>
-                             <td>{item.ac_no}</td>
+                             <td>{item.account_no}</td>
                              
                           </tr>
                         ))}
                     </tbody>
                  </table>
-                 <Link to="/chart" className="btn btn-info">See the chart</Link>
+                 <h1 className="btn btn-info" >See the chart</h1>
+                 <div className="content">
+                    <PieChart  style={{width:"40%",margin:"auto 100px"}}
+                              data={[
+                                { title: 'One', value: 10, color: '#E38627' },
+                                { title: 'Two', value: 15, color: '#C13C37' },
+                                { title: 'Three', value: 20, color: '#6A2135' },
+                              ]}
+                            />;
+                 </div>
               </div>
 
   );
