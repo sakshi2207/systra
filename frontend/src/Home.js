@@ -29,7 +29,7 @@ const Home = ({setAuth}) => {
       });
       const parseData = await res.json();
 
-      setName(parseData.first_name+parseData.last_name);
+      setName(parseData.rows[0].first_name+parseData.rows[0].last_name);
       
       
     } catch (err) {
@@ -47,32 +47,13 @@ const Home = ({setAuth}) => {
       console.error(err.message);
     }
   };
-  const myFunction =(item)=>{
-    return(
-      <tr key={item.emp_id}>
-          <td> {[item.first_name,item.last_name].join(" ")}</td>
-          <td>{item.designation}</td>
-          <td>{item.business}</td>
-          <td>{item.department}</td>
-          <td>{item.bank_name}</td>
-          <td>{item.bank_branch}</td>
-          <td>{item.bank_ifsc}</td>
-          <td>{item.email}</td>
-          <td>{item.account_no}</td>
-          
-       </tr>
-    )
-  }
+ 
   
   useEffect(() => {
     getProfile();
     getEmp();
   }, []);
   
-   
-   
-    
-
   return (
     <div style={{backgroundColor:"lightblue"}}>
       <h1 className="mt-5">Home</h1>
@@ -85,8 +66,7 @@ const Home = ({setAuth}) => {
                  <table row={10} style={{width:"80%",backgroundColor:"yellow",border:"2px solid black",borderCollapse:"collapse"}}>
                      <thead>
                              <th>Emp_id</th>
-                             <th >Firstname</th>
-                             <th>Lastname</th>
+                             <th >Name</th>
                              <th>Designation</th>
                              <th>Business</th>
                              <th>Department</th>
@@ -98,10 +78,26 @@ const Home = ({setAuth}) => {
                      </thead>
                      <tbody>
                        {console.log()}
-                    {emps.map(myFunction)}
+                    {emps.map((item)=>{
+    return(
+      <tr key={item.emp_id}>
+        <td>{item.emp_id}</td>
+          <td> {[item.first_name,item.last_name].join(" ")}</td>
+          <td>{item.designation}</td>
+          <td>{item.business}</td>
+          <td>{item.department}</td>
+          <td>{item.bank_name}</td>
+          <td>{item.bank_branch}</td>
+          <td>{item.bank_ifsc}</td>
+          <td>{item.email}</td>
+          <td>{item.account_no}</td>
+          
+       </tr>
+    )
+  })}
                     </tbody>
                  </table>
-                 <h1 className="btn btn-info" >See the chart</h1>
+                 <button className="btn btn-info" onClick="" >See the chart</button>
                  <div className="content">
                     <PieChart  style={{width:"40%",margin:"auto 100px"}}
                               data={[
