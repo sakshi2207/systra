@@ -14,7 +14,7 @@ const Home = ({setAuth}) => {
       });
       const jsonData = await response.json();
       console.log(jsonData);
-      setEmps(jsonData);
+      setEmps(jsonData.rows);
       console.log(emps);
     } catch (err) {
       console.error(err.message);
@@ -47,6 +47,22 @@ const Home = ({setAuth}) => {
       console.error(err.message);
     }
   };
+  const myFunction =(item)=>{
+    return(
+      <tr key={item.emp_id}>
+          <td> {[item.first_name,item.last_name].join(" ")}</td>
+          <td>{item.designation}</td>
+          <td>{item.business}</td>
+          <td>{item.department}</td>
+          <td>{item.bank_name}</td>
+          <td>{item.bank_branch}</td>
+          <td>{item.bank_ifsc}</td>
+          <td>{item.email}</td>
+          <td>{item.account_no}</td>
+          
+       </tr>
+    )
+  }
   
   useEffect(() => {
     getProfile();
@@ -82,20 +98,7 @@ const Home = ({setAuth}) => {
                      </thead>
                      <tbody>
                        {console.log()}
-                    {emps.rows.map(item=>(
-                         <tr key={item.emp_id}>
-                             <td> {[item.first_name,item.last_name].join(" ")}</td>
-                             <td>{item.designation}</td>
-                             <td>{item.business}</td>
-                             <td>{item.department}</td>
-                             <td>{item.bank_name}</td>
-                             <td>{item.bank_branch}</td>
-                             <td>{item.bank_ifsc}</td>
-                             <td>{item.email}</td>
-                             <td>{item.account_no}</td>
-                             
-                          </tr>
-                        ))}
+                    {emps.map(myFunction)}
                     </tbody>
                  </table>
                  <h1 className="btn btn-info" >See the chart</h1>
